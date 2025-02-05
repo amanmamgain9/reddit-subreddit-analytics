@@ -28,16 +28,16 @@ class SubredditAPI {
     // Add response interceptor for error handling
     this.api.interceptors.response.use(
       (response) => response,
-      (error: AxiosError) => this.handleApiError(error)
+      (error: AxiosError<{message?: string}>) => this.handleApiError(error)
     );
   }
 
-  private handleApiError(error: AxiosError): never {
+  private handleApiError(error: AxiosError<{message?: string}>): never {
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
       throw new Error(
-        error.response.data?.message || 
+        error.response.data?.message ||
         `API Error: ${error.response.status} ${error.response.statusText}`
       );
     } else if (error.request) {

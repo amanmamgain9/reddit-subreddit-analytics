@@ -1,50 +1,85 @@
-# React + TypeScript + Vite
+# Reddit Subreddit Analytics
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application that provides analytics and insights for Reddit subreddits. View, search, and analyze subreddit statistics with an intuitive interface.
 
-Currently, two official plugins are available:
+🔗 [Live Demo](https://amanmamgain9.github.io/reddit-subreddit-analytics/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- 📊 View detailed subreddit statistics and metrics
+- 🔍 Search subreddits by name
+- 📱 Responsive design for all devices
+- ⚡ Real-time filtering and sorting
+- 🔢 Pagination for large datasets
+- 📈 Subscriber count analysis
+- 🎨 Clean and modern UI
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Technologies Used
 
-- Configure the top-level `parserOptions` property like this:
+- **Frontend Framework**: React with TypeScript
+- **Styling**: Styled Components
+- **Build Tool**: Vite
+- **API Integration**: Axios
+- **State Management**: React Hooks
+- **Deployment**: GitHub Pages
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/amanmamgain9/reddit-subreddit-analytics.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+2. Navigate to the project directory:
+```bash
+cd reddit-subreddit-analytics
 ```
+
+3. Install dependencies:
+```bash
+npm install
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+## Building for Production
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+To preview the production build:
+
+```bash
+npm run preview
+```
+
+## Usage
+
+1. **Search Subreddits**: Use the search bar to find specific subreddits
+2. **Filter Results**: Apply filters based on subscriber count
+3. **Sort Data**: Click on column headers to sort by different metrics
+4. **Navigate Pages**: Use the pagination controls to browse through results
+5. **View Details**: Click on a subreddit to view more detailed information
+
+## API
+
+The application uses a custom API endpoint for fetching subreddit data:
+- Base URL: `https://communities-api.amanmamgain9.workers.dev/api/communities`
+- Supports pagination, filtering, and sorting parameters
+- Returns detailed subreddit information including subscriber counts and other metrics
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
