@@ -1,5 +1,5 @@
 // App.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { SubredditFilters, SubredditTable, Pagination } from './components';
 import subredditApi from './api/subreddit';
@@ -36,15 +36,32 @@ const ErrorMessage = styled.div`
 `;
 
 function App() {
+  // Initialize state from URL parameters
   const [subreddits, setSubreddits] = useState<Subreddit[]>([]);
-  const [sortField, setSortField] = useState<keyof Subreddit>('subscribers');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [filters, setFilters] = useState<FilterOptions>({});
-  const [pagination, setPagination] = useState<PaginationResponse>({
-    page: 1,
-    pageSize: 20,
-    totalPages: 0,
-    totalItems: 0
+  const [sortField, setSortField] = useState<keyof Subreddit>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return (params.get('sort') as keyof Subreddit) || 'subscribers';
+  });
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return (params.get('direction') as 'asc' | 'desc') || 'desc';
+  });
+  const [filters, setFilters] = useState<FilterOptions>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      search: params.get('search') || '',
+      subscriberMin: params.get('minSubs') ? Number(params.get('minSubs')) : null,
+      subscriberMax: params.get('maxSubs') ? Number(params.get('maxSubs')) : null
+    };
+  });
+  const [pagination, setPagination] = useState<PaginationResponse>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      page: Number(params.get('page')) || 1,
+      pageSize: 20,
+      totalPages: 0,
+      totalItems: 0
+    };
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +95,29 @@ function App() {
     fetchSubreddits();
   }, [filters, sortField, sortDirection, pagination.page, pagination.pageSize]);
 
+  // Update URL parameters when state changes
+  const updateUrlParams = useCallback((
+    newFilters: FilterOptions,
+    newSortField: keyof Subreddit,
+    newSortDirection: 'asc' | 'desc',
+    newPage: number
+  ) => {
+    const params = new URLSearchParams();
+    
+    // Add sort parameters
+    params.set('sort', newSortField);
+    params.set('direction', newSortDirection);
+    params.set('page', String(newPage));
+    
+    // Add filter parameters
+    if (newFilters.search) params.set('search', newFilters.search);
+    if (newFilters.subscriberMin) params.set('minSubs', String(newFilters.subscriberMin));
+    if (newFilters.subscriberMax) params.set('maxSubs', String(newFilters.subscriberMax));
+    
+    // Update URL without reload
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }, []);
+
   const handleApplyChanges = (
     newFilters: FilterOptions,
     newSortField: keyof Subreddit,
@@ -86,12 +126,14 @@ function App() {
     setFilters(newFilters);
     setSortField(newSortField);
     setSortDirection(newSortDirection);
-    // Reset to first page when filters or sort changes
-    setPagination((prev: PaginationResponse) => ({ ...prev, page: 1 }));
+    const newPage = 1; // Reset to first page when filters or sort changes
+    setPagination((prev: PaginationResponse) => ({ ...prev, page: newPage }));
+    updateUrlParams(newFilters, newSortField, newSortDirection, newPage);
   };
 
   const handlePageChange = (newPage: number) => {
     setPagination((prev: PaginationResponse) => ({ ...prev, page: newPage }));
+    updateUrlParams(filters, sortField, sortDirection, newPage);
   };
 
   return (

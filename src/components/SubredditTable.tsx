@@ -70,6 +70,14 @@ const Th = styled.th`
 const Td = styled.td`
   padding: ${({ theme }) => theme.spacing.md};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const Tr = styled.tr`
@@ -104,7 +112,15 @@ export const SubredditTable: React.FC<SubredditTableProps> = ({
         <tbody>
           {subreddits.map((subreddit) => (
             <Tr key={subreddit.name}>
-              <Td data-label="Name">{subreddit.name}</Td>
+              <Td data-label="Name">
+                <a 
+                  href={`https://reddit.com/${subreddit.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {subreddit.name}
+                </a>
+              </Td>
               <Td data-label="Description">{subreddit.description}</Td>
               <Td data-label="Subscribers">{subreddit.subscribers.toLocaleString()}</Td>
               <Td data-label="Categories">{subreddit.categories?.join(', ') || '-'}</Td>
